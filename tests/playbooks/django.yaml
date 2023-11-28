@@ -1,0 +1,23 @@
+---
+- hosts: app
+  become: true
+  tasks:
+    - name: Ensure python2-pip is installed
+      yum:
+        name: python2-pip
+        state: present
+    # - name: Upgrade pip
+    #   pip:
+    #     name:
+    #       - pip
+    #     state: latest
+    - name: Task1 - Ensure Django is installed
+      pip:
+        name: django<2
+        state: present
+    - name: Task2 - Ensure its dependencies is installed
+      ansible.builtin.yum:
+        name:
+          - MySQL-python
+          - python-setuptools
+        state: present
