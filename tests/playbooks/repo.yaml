@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Install EPEL repo.
+      ansible.builtin.package:
+        name: epel-release
+        state: present
+
+    - name: Import Remi GPG key.
+      ansible.builtin.rpm_key:
+        key: https://rpms.remirepo.net/RPM-GPG-KEY-remi
+        state: present
+
+    - name: Install Remi repo.
+      ansible.builtin.package:
+        name: https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+        state: present
+
+
+
