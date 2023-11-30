@@ -1,0 +1,29 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+
+  tasks:
+    - name: Ensure NTP (for time synchronization) is installed
+      tags:
+        - ntp
+      yum: name=ntp state=present
+
+    - name: Ensure NTP is running
+      tags:
+        - ntp
+      service: name=ntpd state=started enabled=yes
+
+    - name: Ensure Chrony (for time synchronization) is installed
+      tags:
+        - chrony
+      package: name=chrony state=present
+
+    - name: Ensure Chrony is running
+      tags:
+        - chrony
+      service: name=chronyd state=started enabled=yes
+
+
+
+
