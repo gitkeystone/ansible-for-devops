@@ -1,0 +1,12 @@
+---
+- hosts:
+
+  vars:
+    proxy_vars:
+      http_proxy: http://clash.proxy.com:7890
+      https_proxy: https://clash.proxy.com:7890
+
+  tasks:
+    - name: Download a file, using example-proxy as a proxy.
+      get_url: url=http://www.example.com/file.tar.gz dest=~/Downloads/
+      environment: proxy_vars

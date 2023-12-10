@@ -1,0 +1,12 @@
+---
+- hosts: all
+
+  tasks:
+    - debug:
+        # var: ansible_enp0s8.ipv4.address
+        # var: ansible_enp0s8['ipv4']['address']
+        # var: admin_user
+        # var: hostvars['node1.ansible.dev']['admin_user']
+        # var: hostvars, groups, group_names, inventory_hostname, inventory_hostname_short, play_hosts
+        var: admin
+
