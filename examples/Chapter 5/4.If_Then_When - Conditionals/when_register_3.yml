@@ -1,0 +1,41 @@
+---
+- hosts: all
+
+  tasks:
+    # From our Node.js playbook - register a command's output, then see
+    # if the path to our app is in the output. Start the app if it's
+    # not present.
+    - command: forever list
+      register: forever_list
+
+    - command: forever start /path/to/app/app.js
+      when: "forever_list.stdout.find('/path/to/app/app.js') == -1"
+
+    # Run 'ping-hosts.sh' script if 'ping_hosts' variable is true.
+    - command: /usr/local/bin/ping-hosts.sh
+      when: ping_hosts
+
+    # Run 'git-cleanup.sh' script if a branch we're interested in is
+    # missing from git's list of branches in our project.
+    - command: chdir=/path/to/project git branch
+      register: git_branches
+
+    - command: /path/to/project/scripts/git-cleanup.sh
+      when: "(is_app_server == true) and ('interesting-branch' not in git_branches.stdout)"
+
+    # Downgrade PHP version if the current version contains '7.0'.
+    - shell: php --version
+      register: php_version
+
+    - shell: yum -y downgrade php*
+      when: "'7.0' in php_version.stdout"
+
+    # Copy a file to the remote server if the hosts file doesn't exist.
+    - stat: path=/etc/hosts
+      register: hosts_file
+
+    - copy: src=/path/to/local/file dest=/path/to/remote/file
+      when: hosts_file.stat.exists == false
+
+
+

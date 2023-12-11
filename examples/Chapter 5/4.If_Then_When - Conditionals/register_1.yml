@@ -1,0 +1,14 @@
+---
+- hosts: all
+
+  tasks:
+    - name: display current directory
+      shell: >
+        pwd
+      # run playbook with -v
+      # register: current_dir
+
+    - name: print
+      debug:
+        # var: current_dir.stdout
+        var: current_dir.stderr

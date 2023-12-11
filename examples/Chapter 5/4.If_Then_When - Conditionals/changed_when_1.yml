@@ -1,0 +1,8 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Install dependencies via Composer.
+      command: /usr/local/bin/composer global require phpunit/phpunit --prefer-dist
+      register: composer
+      changed_when: "'Nothing to install' not in composer.stdout"
