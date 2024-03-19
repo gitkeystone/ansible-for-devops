@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+
+  vars_prompt:
+    - name: "share_user"
+      prompt: "What is your network username"
+
+    - name: "share_pass"
+      prompt: "What is your network password"
+      private: yes

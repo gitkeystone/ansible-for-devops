@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+    # In the 'vars' section of the playbook (set to 'absent' to disable proxy):
+    proxy_state: present
+
+  tasks:
+    - name: Configure the proxy.
+      lineinfile:
+        dest: /etc/environment
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: "{{ proxy_state }}"
+      loop:
+        - regexp: "^http_proxy="
+          line: "http_proxy=http://clash.proxy.com:7890"
+        - regexp: "^https_proxy="
+          line: "https_proxy=https://clash.proxy.com:7890"
+        - regexp: "^ftp_proxy="
+          line: "ftp_proxy=socks5://clash.proxy.com:7890"

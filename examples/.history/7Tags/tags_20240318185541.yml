@@ -1,0 +1,28 @@
+---
+- hosts: all
+  gather_facts: no
+
+  # You can apply tags to an entire play.
+  tags:
+    - deploy
+
+  roles:
+    - common
+    - { role: backup, tags: ['backup', 'app'] }
+    # Tags applied to a role will be applied to tasks in the role.
+    - { role: tomcat, tags: ['tomcat', 'app'] }
+
+
+  tasks:
+    - name: Notify on completion
+      local_action:
+        module: osx_say
+        msg: "{{ inventory_hostname }} is finished!"
+        voice: Zarvox
+      tags:
+        - notifications
+        - say
+
+    - ansible.builtin.import_tasks: foo.yml
+      tags:
+        - 'foo'

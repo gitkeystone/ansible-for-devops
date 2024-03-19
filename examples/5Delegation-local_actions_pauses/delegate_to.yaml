@@ -1,0 +1,14 @@
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Print the hostname
+      # local_action: command hostname
+      ansible.builtin.command:
+        cmd: hostname
+      delegate_to: localhost
+
+
+
+
+

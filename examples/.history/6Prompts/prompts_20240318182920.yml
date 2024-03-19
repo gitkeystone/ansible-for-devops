@@ -1,0 +1,8 @@
+---
+- host: all
+  gather_facts: no
+  become: yes
+
+  vars_prompt:
+    - name: "share_user"
+      prompt: "What is your network username"

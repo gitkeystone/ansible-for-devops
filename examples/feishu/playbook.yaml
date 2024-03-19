@@ -1,0 +1,22 @@
+- hosts: localhost
+  connection: local
+
+  gather_facts: no
+
+  vars_files:
+    - vars/bot.yaml
+
+  tasks:
+    - name: post to Feishu
+      ansible.builtin.uri:
+        url: "{{ Webhook_URL }}"
+        method: POST
+        body_format: json
+        headers:
+          Content-Type: application/json
+        src: alerts/diskspace.json
+      register: _result
+      until: _result.status == 200
+      retries: 2                        # 720 * 5s = 1h
+      delay: 5                            # Every 5 seconds
+
