@@ -1,0 +1,14 @@
+---
+# tasks file for yum-repo-setup
+    - name: Install EPEL repo.
+      yum: name=epel-release state=present
+
+    - name: Import Remi GPG key.
+      rpm_key:
+        key: "https://rpms.remirepo.net/RPM-GPG-KEY-remi"
+        state: present
+
+    - name: Install Remi repo.
+      yum:
+        name: "https://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+        state: present

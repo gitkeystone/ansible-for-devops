@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+    node_apps_location: /usr/local/opt/node
+
+  roles:
+    - yum-repo-setup
+    - firewall
+    - nodejs
+    - app-deploy
+

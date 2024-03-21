@@ -1,0 +1,5 @@
+---
+# tasks file for app-deploy
+- name: start or stop app
+  include_tasks: "{{ app_state }}.yml"
+  tags: app

@@ -1,0 +1,7 @@
+---
+# Stop the Node.js app.
+- name: Stop example Node.js app.
+  ansible.builtin.command: /usr/local/bin/forever stop {{ node_apps_location }}/app/app.js
+  when: forever_list.stdout.find(node_apps_location + "/app/app.js") != -1
+
+

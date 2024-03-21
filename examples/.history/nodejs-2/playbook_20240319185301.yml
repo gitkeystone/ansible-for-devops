@@ -1,0 +1,8 @@
+---
+- hosts: all
+  roles:
+    - yum-repo-setup
+    - firewall
+    - nodejs
+    - app-deploy
+

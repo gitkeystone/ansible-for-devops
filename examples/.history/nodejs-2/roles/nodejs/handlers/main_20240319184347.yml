@@ -1,0 +1,5 @@
+---
+# handlers file for nodejs
+  handlers:
+    - name: restart node.js app
+      ansible.builtin.command: /usr/local/bin/forever restart {{ node_apps_location }}/app/app.js

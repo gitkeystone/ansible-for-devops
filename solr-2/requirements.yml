@@ -1,0 +1,5 @@
+---
+# From Ansible Galaxy, latest version
+- src: geerlingguy.repo-epel
+- src: geerlingguy.java
+- src: geerlingguy.solr

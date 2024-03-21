@@ -1,0 +1,9 @@
+---
+# tasks file for nodejs
+    - name: Install Node.js （npm plus all its dependencies）
+      yum: name=npm state=present enablerepo=epel
+
+    - name: Install Forever (to run our Node.js app)
+      npm: name=forever global=yes state=present
+
+

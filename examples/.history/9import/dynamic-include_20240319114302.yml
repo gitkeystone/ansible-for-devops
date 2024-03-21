@@ -1,0 +1,14 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+
+  tasks:
+    # Include extra tasks file, only if it's present at runtime.
+    - name: Check if extra_task.yml is present
+      stat: path=tasks/user.yml
+      register: extra_tasks_file
+      connection: local
+
+    - include_tasks: tasks/user.yml
+      when:

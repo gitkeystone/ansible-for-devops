@@ -1,0 +1,4 @@
+---
+# defaults file for nodejs
+node_npm_modules:
+  - forever

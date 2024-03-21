@@ -1,0 +1,14 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - import_tasks: user.yml
+      vars:
+        username: johndoe
+        ssh_private_keys:
+          - { src: /path/to/johndoe/key1, dest: id_rsa }
+          - { src: /path/to/johndoe/key2, dest: id_rsa_2 }
+
+

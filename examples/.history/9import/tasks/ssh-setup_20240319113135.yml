@@ -1,0 +1,9 @@
+---
+- name: Add private keys for user.
+  copy:
+    src: "{{ item.src }}"
+    dest: "/home/{{ username }}/.ssh/{{ item.dest }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0600
+  with_items: "{{ ssh_private_keys }}"

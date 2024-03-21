@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+
+  roles:
+    - yum-repo-setup
+    - firewall
+    - nodejs
+    - app-deploy
+

@@ -1,0 +1,3 @@
+---
+# vars file for app-deploy
+app_state: start

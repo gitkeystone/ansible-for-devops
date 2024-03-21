@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    # Check if specific port is open
+    - name: netstat
+      shell: >
+        /bin/netstat -tuln | /bin/grep ":{{ item }}" |sed -e 's/.*\///'
+      register: netstat
+      with_items:
+        - 80
+
+    - name: output
+      debug:
+        msg: "NetDetails of port({{ item.item }}) is 【{{ item.stdout }}】"
+      with_items:
+        - "{{ netstat.results }}"

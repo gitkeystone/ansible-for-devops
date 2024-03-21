@@ -1,0 +1,23 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+
+  tasks:
+    # Check if specific port is open
+    - name: Check network connnections
+      shell: >
+        netstat -antulp |grep ":{{ item }}"
+      register: connnections
+      with_items:
+        - 443
+        - 80
+      failed_when: false
+
+    - name: output
+      debug:
+        msg: "Network connnections of port-{{ item.item }} is 【{{ item.stdout }}】"
+      with_items:
+        - "{{ connnections.results }}"
+
+    - debug: msg="{{ connnections }}"

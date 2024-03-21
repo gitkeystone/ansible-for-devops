@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    # Check if specific port is open
+    - name: netstat
+      shell: >
+        /bin/netstat -tuln | /bin/grep ":{{ item }}" |sed -e 's/.*://' | /bin/awk '{print $1}'
+      register: netstat
+      with_items:
+        - 80
+        - 443

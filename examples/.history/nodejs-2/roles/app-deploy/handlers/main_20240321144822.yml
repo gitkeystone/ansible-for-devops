@@ -1,0 +1,6 @@
+---
+# handlers file for app-deploy
+- name: stop node.js app
+  ansible.builtin.command: >
+    /usr/local/bin/forever stop {{ node_apps_location }}/app/app.js
+  ignore_errors: true

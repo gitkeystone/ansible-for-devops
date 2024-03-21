@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+
+  roles:
+    - geerlingguy.repo-epel
+    - geerlingguy.mysql
+    - geerlingguy.apache
+    - geerlingguy.php
+    - geerlingguy.php-mysql
+    - geerlingguy.nodejs
+    - geerlingguy.composer
