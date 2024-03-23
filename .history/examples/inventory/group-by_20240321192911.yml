@@ -1,0 +1,16 @@
+---
+- hosts: node1
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Create an inventory group for each architecture.
+      group_by:
+        key: "architecture-{{ ansible_machine }}"
+
+    - debug: var=groups
+
+    - name: Add new host to our inventory
+      add_host:
+        name: "node[1:3]"
+        groups: "architecture-{{ ansible_machine }}"

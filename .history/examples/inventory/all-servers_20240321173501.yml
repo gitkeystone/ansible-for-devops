@@ -1,0 +1,13 @@
+---
+# Set up basic, standardized components across all servers.
+- hosts: all
+  become: yes
+  roles:
+    - security
+    - logging
+    - firewall
+
+# Configure web application servers.
+- hosts: servercheck-web
+  roles:
+    - nginx
