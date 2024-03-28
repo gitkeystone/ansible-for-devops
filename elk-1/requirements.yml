@@ -1,0 +1,10 @@
+---
+roles:
+  - name: geerlingguy.java
+  - name: geerlingguy.nginx
+  - name: geerlingguy.pip
+  - name: geerlingguy.elasticsearch
+  - name: geerlingguy.elasticsearch-curator
+  - name: geerlingguy.kibana
+  - name: geerlingguy.logstash
+  - name: geerlingguy.filebeat

@@ -1,0 +1,9 @@
+[logs]
+43.135.33.233 ansible_ssh_user=ubuntu
+
+
+[web]
+43.132.213.193 ansible_ssh_user=ubuntu
+
+
+

@@ -1,0 +1,3 @@
+---
+- import_playbook: playbooks/elk/main.yml
+- import_playbook: playbooks/web/main.yml

@@ -1,0 +1,69 @@
+---
+- hosts: versioneye
+
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+    - name: Create a timestamp
+      set_fact:
+        # timestamp: "{{ lookup('pipe', 'date -u +%Y%m%d%H%M%S') }}"
+        timestamp: "{{ lookup('pipe', 'TZ=Asia/Shanghai date +%Y%m%d%H%M%S') }}"
+      run_once: true
+
+
+    - name: Create directory
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        recurse: yes
+        mode: 0755
+      with_items:
+        - "{{ app_direcotry }}/shared/log"
+        - "{{ app_direcotry }}/shared/pids"
+        - "{{ app_direcotry }}/releases/{{ timestamp }}"
+
+  tasks:
+    - name: Checkout git repo into release direcory
+      git:
+        repo: "{{ app_repo }}"
+        dest: "{{ app_direcotry }}/releases/{{ timestamp }}"
+        version: "{{ app_version }}"
+        accept_hostkey: false
+        force: yes
+
+  post_tasks:
+    - name: remove log/pids directory, otherwise link failed.
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ app_direcotry }}/releases/{{ timestamp }}/log"
+        - "{{ app_direcotry }}/releases/{{ timestamp }}/pids"
+
+    - name: link direcory
+      file:
+        src:  "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        state: link
+      with_items:
+        - {
+            src:  "{{ app_direcotry }}/shared/log",
+            dest: "{{ app_direcotry }}/releases/{{ timestamp }}/log"
+          }
+        - {
+            src:  "{{ app_direcotry }}/shared/pids",
+            dest: "{{ app_direcotry }}/releases/{{ timestamp }}/pids"
+          }
+        - {
+            src:  "{{ app_direcotry }}/releases/{{ timestamp }}",
+            dest: "{{ app_direcotry }}/current"
+          }
+
+
+
+
+
+

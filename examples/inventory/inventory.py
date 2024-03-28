@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 '''
 Example custom dynamic inventory script for Ansible, in Python
@@ -33,7 +33,7 @@ class ExampleInventory(object):
             # self.inventory = self.example_inventory()
             self.inventory = self.empty_inventory()
 
-        print json.dumps(self.inventory);
+        print(json.dumps(self.inventory));
 
     def read_cli_args(self):
         ''' Read the command line args passed to the script. '''
@@ -46,8 +46,8 @@ class ExampleInventory(object):
 
 
         return {
-            "app": {
-                "hosts": [ "192.168.60.11", "192.168.60.12" ],
+            "virtualbox": {
+                "hosts": [ "192.168.60.11", "192.168.60.12", "192.168.60.13" ],
                 "vars": {
                     "ansible_ssh_user": "vagrant",
                     "ansible_ssh_private_key_file":

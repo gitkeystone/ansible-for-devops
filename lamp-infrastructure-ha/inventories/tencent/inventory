@@ -1,0 +1,22 @@
+[lamp_varnish]
+43.132.224.120
+
+
+
+[lamp_www]
+43.129.250.225
+150.109.159.141
+
+
+
+[lamp_db]
+43.129.196.206   mysql_server_id=1 mysql_replication_role=master
+124.156.160.202  mysql_server_id=2 mysql_replication_role=slave
+
+[hk.lamp.db.1]
+43.129.196.206
+
+
+[lamp_memcached]
+43.135.24.190
+

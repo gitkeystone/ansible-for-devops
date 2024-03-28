@@ -1,0 +1,29 @@
+---
+- hosts: lamp_db
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+
+  pre_tasks:
+    # 使用 set_fact 模块，是为了提前设置变量， 并且是动态创建变量。geerlingguy.mysql 排后边。
+    - name: Create dynamic MySQL variables.
+      set_fact:
+        mysql_users:
+          - name: mycompany_user
+            host: "{{ groups['lamp_www'][0] }}"
+            password: secret
+            priv: "*.*:SELECT"
+          - name: mycompany_user
+            host: "{{ groups['lamp_www'][1] }}"
+            password: secret
+            priv: "*.*:SELECT"
+
+        # 记得在 inventory 中添加 mysql_replication_role， 用来区分 master/slave
+        mysql_replication_master: "{{ groups['hk.lamp.db.1'][0] }}"
+
+  roles:
+    - buluma.selinux
+    - geerlingguy.firewall
+    - geerlingguy.mysql

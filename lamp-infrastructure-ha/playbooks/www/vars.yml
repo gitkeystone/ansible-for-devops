@@ -1,0 +1,7 @@
+---
+# The state, either disabled, permissive or enforcing.
+selinux_state: disabled
+
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"

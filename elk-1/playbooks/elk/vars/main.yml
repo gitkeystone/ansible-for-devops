@@ -1,0 +1,66 @@
+---
+# Java
+java_packages:
+  - openjdk-11-jdk
+
+# Nginx: /etc/nginx/sites-enabled/kibana.conf
+nginx_user: www-data
+nginx_remove_default_vhost: true
+nginx_vhosts:
+  # Kibana proxy.
+  - listen: "80 default_server"
+    filename: kibana.conf
+
+    # Hostname = Domain Name, 生成的证书中要包含这个
+    server_name: logs.test
+
+    extra_parameters: |
+      location / {
+          include /etc/nginx/proxy_params;
+          proxy_pass          http://localhost:5601;
+          proxy_set_header   Authorization "";
+          proxy_read_timeout  90s;
+      }
+
+# Elasticsearch
+elasticsearch_curator_pip_package: python3-pip
+
+# Logstash
+# -- 私钥
+logstash_ssl_key_file: elk-example.p8
+# -- 证书
+logstash_ssl_certificate_file: elk-example.crt
+
+# Filebeat
+filebeat_output_logstash_enabled: true
+filebeat_output_logstash_hosts:
+  - "logs.test:5044"
+
+# -- certificate_authorities：CA 证书，即用来签署证书的证书。
+# -- 这里表示配置 Filebeat 使其信任所有由该 CA 证书发行的证书。
+# -- 因为自签名证书的发行者和证书主体相同，所以这里直接使用 Logstash 证书使 Filebeat 信任使用该证书的 Logstash server；
+# 原理：filebeat 向 logstash 发送请求，logstash 会返回自己的证书。
+#      filebeat 会用这个证书和自己的 CA 证书进行验证，如果验证通过，则建立连接。
+#      所以，这里需要 logstash 给的证书是如何进行签名的, 一般都是证书颁发机构，使用自己的私钥进行签名。
+#      因为，自签名证书的发行者和证书主体相同，所以办法机构的签名证书就是签名后的证书。
+filebeat_ssl_ca_file: "elk-example.crt"
+# -- 私钥key
+filebeat_ssl_key_file: elk-example.p8
+# -- 证书certificatie
+filebeat_ssl_certificate_file: elk-example.crt
+# -- 忽略证书验证, 接收自签名证书 self-signed certificate
+filebeat_ssl_insecure: "true"
+
+# Filebeat 将这些列表中文件数据发给 Logstash
+filebeat_inputs:
+  - type: log
+    paths:
+      - /var/log/auth.log
+
+
+
+
+
+
+
+

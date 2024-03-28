@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - buluma.selinux
+
+  tasks:
+    - name: Ensure required SELinux dependency is installed.
+      package:
+        name: libsemanage-python
+        state: present
+
+    - name: Configure SELinux to allow HTTPD connections.
+      seboolean:
+        name: "{{ item }}"
+        state: true
+        persistent: true
+      with_items:
+        - httpd_can_network_connect_db
+        - httpd_can_network_memcache
+      when: ansible_selinux.status == 'enabled'

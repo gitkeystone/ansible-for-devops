@@ -1,0 +1,6 @@
+---
+# From Ansible Galaxy, latest version
+- src: geerlingguy.git
+- src: geerlingguy.ruby
+- src: geerlingguy.nodejs
+- src: geerlingguy.passenger

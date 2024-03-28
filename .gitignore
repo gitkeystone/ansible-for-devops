@@ -7,5 +7,10 @@ __pycache__
 test.sh
 
 */roles/geerlingguy.*
+*/roles/buluma.*
+*/roles/f500.*
 */provisioning/roles/geerlingguy.*
 */collections/ansible_collections/community/*
+
+.history/
+.vscode/

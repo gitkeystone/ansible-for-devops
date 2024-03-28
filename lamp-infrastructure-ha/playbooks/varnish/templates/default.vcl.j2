@@ -1,0 +1,33 @@
+vcl 4.0;
+
+import directors;
+
+# 配置后端节点
+{% for host in groups['lamp_www'] %}
+backend www{{ loop.index }} {
+    .host = "{{ host }}";
+    .port = "80";
+}
+{% endfor %}
+
+
+
+sub vcl_init {
+    # 初始化一天负载均衡器
+    new vdir = directors.random();
+
+{% for host in groups['lamp_www'] %}
+    # 给负载均衡器添加后端节点
+    vdir.add_backend(www{{ loop.index }}, 1);
+{% endfor %}
+}
+sub vcl_recv {
+    # 所有的接收到的请求，都路由到负载均衡器
+    set req.backend_hint = vdir.backend();
+
+    # For testing ONLY; makes sure load balancing is working correctly.
+    # 不在 varnish 中使用缓存，如果使用缓存，那么 varnish 缓存会导致，仅仅访问后端一个节点；
+    # 反向代理，也不起作用；
+    # 生产环境，应该删除下面这行代码；
+    return (pass);
+}

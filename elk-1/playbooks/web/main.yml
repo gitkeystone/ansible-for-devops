@@ -1,0 +1,34 @@
+---
+- hosts: web
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Update apt cache if needed.
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+  roles:
+    - geerlingguy.nginx
+    - geerlingguy.filebeat
+
+
+  tasks:
+    - name: Set up virtual host for testing.
+      copy:
+        src: files/example.conf
+        dest: /etc/nginx/sites-enabled/example.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart nginx
+
+    - name: Ensure logs server is in hosts file.
+      lineinfile:
+        path: /etc/hosts
+        regexp: '.*logs\.test$'
+        line: "43.135.33.233 logs.test"
+        state: present

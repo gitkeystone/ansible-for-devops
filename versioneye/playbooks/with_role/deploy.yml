@@ -1,0 +1,19 @@
+---
+- hosts: versioneye
+
+  vars_files:
+    - vars.yml
+
+  # pre_tasks:
+  #   - name: Create directory
+  #     file:
+  #       path: "{{ project_root }}"
+  #       state: directory
+  #       owner: "{{ project_deploy_user }}"
+  #       group: "{{ project_deploy_user }}"
+  #       recurse: yes
+  #       mode: 0755
+  #     become: yes
+
+  roles:
+    - f500.project_deploy

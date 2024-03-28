@@ -1,0 +1,11 @@
+[gluster]
+43.128.40.2
+43.129.247.18
+43.132.228.224
+43.129.228.21
+
+
+[gluster:vars]
+ansible_ssh_user=ubuntu
+
+

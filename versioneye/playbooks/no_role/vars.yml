@@ -1,0 +1,7 @@
+---
+# Capistrano
+app_repo: https://github.com/versioneye/versioneye.git
+app_version: master
+app_direcotry: /var/www/versioneye
+app_user: vagrant
+

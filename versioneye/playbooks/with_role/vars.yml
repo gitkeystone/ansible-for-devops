@@ -1,0 +1,68 @@
+---
+# Project
+project_root: "/home/vagrant/versioneye"
+project_release: "v3.12.3" # 推荐手动指定格式，默认为时间戳格式
+project_deploy_user: "vagrant"
+
+# Strategies
+project_deploy_strategy: "synchronize" # "git", "synchronize" or "s3"
+
+# -- Strategies: Git --
+project_git_repo: "https://github.com/versioneye/versioneye.git"
+project_version: "master" # can be a branch, tag or commit hash
+
+# -- Strategy: Synchronize --
+# using a .rsyn file in the source folder
+project_deploy_synchronize_timeout: 30
+project_local_path: "files/versioneye/"     # 注意，尾斜线表示传输的是目录下的所有文件，但不包含目录本身。
+
+# -- Strategy: S3 --
+# to install python-boto on the target host and set AWS credentials
+aws_access_key: 'ACCESS_KEY'
+aws_secret_key: 'SECRET_KEY'
+
+project_s3_region: 'eu-west-1'
+project_s3_bucket: 'my-bucket'
+project_s3_path: '/my-app/'
+project_s3_filename: my-app-master.war
+
+# Project Directory config
+project_source_path: "{{ project_root }}/shared/source"
+# project_source_path: "{{ project_root }}/repo"
+# project_unwanted_items: [ '.git' ]
+
+
+project_environment:
+  SYMFONY_ENV: "prod"
+
+
+project_shared_children:
+  - src: "sessions"       # {{ deploy_helper.shared_path }}/{{ item.src }}
+    path: "app/sessions"  # {{ deploy_helper.new_release_path }}/{{ item.path }}
+    type: directory       # directory - default; touch - files;
+
+  - src: "uploads"
+    path: "web/uploads"
+
+  - src: "xx.log"
+    path: "log/xx.log"
+    type: touch
+
+project_keep_releases: 5
+
+# Configure file, 相对于 playbook
+# project_files:
+#   - name: "some_file"
+#     src: "local-path-to-file"
+#     dest: "remote-path-to-file"     # {{ deploy_helper.new_release_path }}/{{ item.dest }}
+#     mode: 0644                      # 默认
+#   - name: "some_other_file"
+#     src: "local-path-to-other-file"
+#     dest: "remote-path-to-other-file"
+
+# Works the same as the project_files
+# project_templates: []
+
+
+
+
