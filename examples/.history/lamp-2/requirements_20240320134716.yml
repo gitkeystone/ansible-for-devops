@@ -1,7 +1,0 @@
----
-# From Ansible Galaxy, latest version
-- src: geerlingguy.firewall
-
-# From Ansible Galaxy, specific version
-- src: geerlingguy.php
-  version: 3.5.1

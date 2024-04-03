@@ -1,0 +1,7 @@
+---
+- src: geerlingguy.repo-epel
+- src: geerlingguy.pip
+- src: geerlingguy.git
+- src: buluma.bootstrap
+- src: buluma.selinux
+- src: geerlingguy.security

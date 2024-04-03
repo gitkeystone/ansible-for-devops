@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+    # bootstrap
+    bootstrap_user: root
+    bootstrap_wait_for_host: yes
+
+    # selinux
+    selinux_state: enforcing  # disabled, permissive, enforcing
+    selinux_reboot: true
+    selinux_booleans:
+      # 必须保证 httpd_can_network_connect 永远为 true， 然后 Ansible 才能远程控制其他操作。
+      - name: httpd_can_network_connect
+      - name: abrt_anon_write
+        state: false
+        persistent: false
+
+  roles:
+    - buluma.bootstrap
+    - buluma.selinux
+
+  # tasks:
+  #   - name: Ensure httpd can connect to the network
+  #     seboolean: name=httpd_can_network_connect state=false persistent=false
+
+# About
+
+# https://major.io/p/getting-started-with-selinux/

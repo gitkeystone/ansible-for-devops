@@ -1,0 +1,49 @@
+[DEFAULT]
+{#
+# "ignoreip" 字段设置不会被禁止访问的主机地址，它可以是单 IP 地址、
+# CIDR （汇聚网段）地址，甚至可以是 DNS （主机域名）。
+# 若有多个条目，各条目间用空格分隔。
+#}
+ignoreip = 127.0.0.1
+
+{#
+# "bantime" 字段设置禁止访问的时间间隔，以秒为单位。也可以设置 1s, 1m, 1h, 1d。
+#}
+bantime  = 1m
+
+{#
+# "findtime" 字段设置含义，在这个指定时间间隔内，
+# 达到或超过  "maxretry"  次失败连接尝试，即被命中，禁止访问。
+# 以秒为单位。
+#}
+findtime  = 600
+
+{#
+# "maxretry" 字段设置含义，见上个字段设置说明。默认5次。
+#}
+Maxretry = 3
+
+{#
+# "backend" 字段指定使用哪个系统后台服务及时获得路由表文件变动。
+# 选项有  "gamin", "polling" 和 "auto"。
+# 呀喔！未知原因造成 Debian 类系统下的 python-gamin 脚本不能正确执行。
+#      这个问题留待以后解决，目前 polling 是默认值。
+# （译注：现在这个问题已不存在，详细看相关文档，多了些设置值）
+# （译注：不知道的话，一般设为 auto 即可）
+#}
+backend = auto
+
+{#
+# 目标邮件地址，仅仅在 jail.{conf,local}  配置文件中占位。
+#}
+destemail = root@localhost
+
+
+{% for prisoner in prisoners %}
+[{{ prisoner.name }}]
+enabled = true
+{% endfor %}
+
+
+
+

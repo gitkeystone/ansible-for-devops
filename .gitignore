@@ -9,6 +9,7 @@ test.sh
 */roles/geerlingguy.*
 */roles/buluma.*
 */roles/f500.*
+*/roles/nickhammond.*
 */provisioning/roles/geerlingguy.*
 */collections/ansible_collections/community/*
 

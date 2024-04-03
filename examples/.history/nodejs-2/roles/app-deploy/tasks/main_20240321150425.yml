@@ -1,5 +1,0 @@
----
-# tasks file for app-deploy
-- name: app-deploy
-  include_tasks: "{{ app_state }}.yml"
-

@@ -1,0 +1,24 @@
+---
+- hosts: jenkins.test
+  become: yes
+
+  vars:
+    ansible_install_method: package
+    firewall_allowed_tcp_ports:
+      - "22"
+      - "8080"
+    jenkins_plugins:
+      - ansicolor           # Color ANSI Console Output - full color display
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+  roles:
+    - geerlingguy.firewall
+    - geerlingguy.pip
+    - geerlingguy.ansible
+    - geerlingguy.java
+    - geerlingguy.jenkins

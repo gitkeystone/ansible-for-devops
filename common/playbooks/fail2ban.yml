@@ -1,0 +1,74 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+    prisoners:
+      - name: sshd
+        # port: ssh
+        # logpath: /var/log/auth.log
+        # maxretry: 3
+        # bantime: 600
+        # ignoreip: 127.0.0.1
+        # findtime: 600
+        # backend: auto
+        # enabled: true
+        # action: iptables-allports[name=sshd, port=ssh, protocol=tcp]
+        # filter: sshd
+        # protocol: tcp
+        # banaction: iptables-allports[name=sshd, port=ssh, protocol=tcp]
+        # logencoding: auto
+
+
+  tasks:
+    - name: Install fail2ban (RedHat)
+      yum:
+        name: fail2ban
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install fail2ban (Debian)
+      apt:
+        name: fail2ban
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Create fail2ban configuration file
+      template:
+        src: templates/fail2ban/{{ ansible_os_family }}-jail.conf.j2
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart fail2ban
+
+  handlers:
+    - name: restart fail2ban
+      service:
+        name: fail2ban
+        state: restarted
+        enabled: yes
+
+
+
+# About
+# 原理：
+#     扫描 /var/log/auth.log 等文件，检测登录失败的次数，
+#     超过规定次数后，将IP加入到防火墙黑名单中, 此后的一段时间拒绝此链接访问。
+#     开箱即用，可以读取很多标准日志文件，如 sshd 或 apache 的日志文件，换可以针对 ERROR 类型进行配置。
+# 适用于： SSH、FTP、SMTP、HTTP等服务
+# 优点： 无需修改服务配置文件，只需修改 fail2ban 配置文件即可
+# 缺点： 无法防御大规模的 DDoS 攻击；建议配置双因子认证，或使用公钥、私钥认证机制。
+# 安装： apt-get install fail2ban
+# 验证是否安装成功：fail2ban-client -h
+# 查看封禁服务：fail2ban-client status
+# 配置文件： /etc/fail2ban/jail.conf
+# 日志文件： /var/log/fail2ban.log
+# 查看日志详情：sudo grep NOTICE /var/log/fail2ban.log
+# 配置文件说明：
+# [DEFAULT]： 全局配置
+# [Definition]： 定义正则表达式
+# [sshd]： 针对 sshd 服务的配置
+
+
+

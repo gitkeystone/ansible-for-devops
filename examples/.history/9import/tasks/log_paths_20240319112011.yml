@@ -1,7 +1,0 @@
----
-- name: Check for existing log files in dynamic log_file_paths variable.
-  find:
-    paths: "{{ item }}"
-    patterns: "*.log"
-  register: found_log_file_paths
-  with_items: "{{ log_file_paths }}"

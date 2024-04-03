@@ -1,6 +1,0 @@
----
-# vars file for nodejs
-node_npm_modules:
-  - forever
-  - async
-  - request

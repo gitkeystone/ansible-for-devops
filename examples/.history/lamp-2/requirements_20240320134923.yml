@@ -1,6 +1,0 @@
----
-# From Ansible Galaxy, latest version
-- src: geerlingguy.apache
-- src: geerlingguy.mysql
-- src: geerlingguy.php
-- src: geerlingguy.php-mysql

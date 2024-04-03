@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+
+  # 基本都是针对 SSH 做的一些安全措施，除了是否开启自动更新
+  vars:
+    security_ssh_port: 2849
+    security_ssh_allowed_users: []
+    security_ssh_allowed_groups: []
+    security_sudoers_passwordless:
+      - vagrant
+      - deployacct
+    security_sudoers_passworded: []
+    security_autoupdate_enabled: false
+    security_fail2ban_enabled: true
+    security_fail2ban_custom_configuration_template: "jail.local.j2"
+
+
+  roles:
+    - geerlingguy.security

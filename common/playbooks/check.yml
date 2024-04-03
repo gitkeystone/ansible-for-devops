@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - import_tasks: tasks/port_has_opened.yml
+      vars:
+        port: 8080
+
+
+
+

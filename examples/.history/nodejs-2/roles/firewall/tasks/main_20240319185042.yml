@@ -1,8 +1,0 @@
----
-# tasks file for firewall
-- name: Ensure firewalld is stopped (since this is for testing)
-  service: name=firewalld state=stopped
-
-- name: Disable SELinux (since this is for testing)
-  selinux: state=disabled
-

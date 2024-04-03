@@ -1,8 +1,0 @@
----
-# Deploy the application
-- name: app-deploy
-  include_tasks: "deployment.yml"
-
-- name: start or stop the app
-  include_tasks: "{{ app_state }}.yml"
-

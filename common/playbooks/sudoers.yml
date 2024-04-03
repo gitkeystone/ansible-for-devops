@@ -1,0 +1,20 @@
+---
+# [Sudoers Manual](https://www.sudo.ws/docs/man/sudoers.man/)
+- hosts: all
+  become: yes
+
+  tasks:
+    # 区别与使用 visudo 命令，无法验证语法错误，所以一定要小心
+    - name: Add sudo rights for deployment user.
+      lineinfile:
+        dest: /etc/sudoers
+        regexp: '^johndoe'
+        line: 'johndoe ALL=(ALL) NOPASSWD: ALL'
+        state: present
+
+    # 在文件被上传到最终位置前，使用命令对src文件进行验证；template 模块也有这个选项 validate
+    - name: Copy validated sudoers file into place.
+      copy:
+        src: soduers
+        dest: /etc/soduers
+        validate: 'visudo -cf %s'

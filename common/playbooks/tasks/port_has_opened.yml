@@ -1,0 +1,12 @@
+---
+- name: Check network connnections
+  shell: >
+    netstat -antulp |grep ":{{ port }}"
+  register: connnection
+  ignore_errors: true
+
+- name: output
+  debug:
+    msg: |-
+      "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+      {{ connnection.stdout  }}"

@@ -1,0 +1,67 @@
+---
+logrotate_scripts:
+  - name: rails
+    # path: "/srv/current/log/*.log"
+    path: "/tmp/log/rails.log"
+    options:            # man logrotate
+      - weekly          # hourly, daily(default), weekly, monthly, yearly
+      - rotate 5        # 0: default, 不轮转，直接删除，重新创建；-1：不删除轮转文件；5：删除前，轮转5次；
+      # - size 25M      # (bytes),k,M,G按时间轮转，和按大小轮转，是互斥的, 哪个在后那个起作用。
+      - missingok       # 如果日志文件丢失，直接 pass, 处理下一个；默认 - nomissingok;
+      - compress        # 默认 .gz, 推荐 .bz2 - 高压缩比，虽然压缩速度慢，但不介意
+      # - compresscmd /bin/bzip2
+      # - uncompresscmd /bin/bunzip2
+      # - compressext .bz2
+      # - compressoptions -9
+      - delaycompress     # 延迟压缩，类似 copytruncate， 也是为了解决一些无法被通知去关闭日志文件的程序。
+      - copytruncate      # 高，先复制一份原始文件备份，然后，将原始文件截断为0，有利于保持原始文件的句柄，方便一些无法被通知去关闭日志文件的软件进程。
+      - su root root
+      - extension .log    # 文件后缀，好处，备份文件为 而不是 rails.log-20240330.gz
+
+      - nodateext         # nodateext + start 0: 表示使用数字，而不是日期；rails.0.log.gz、rails.1.log.gz；数字越小，表示当前日志越近。
+      - start 0
+
+  # - name: rails-1
+  #   paths:
+  #       - "/srv/current/scare.log"
+  #       - "/srv/current/hide.log"
+  #   options:
+  #     - weekly
+  #     - size 25M
+  #     - missingok
+  #     - compress
+  #     - delaycompress
+  #     - copytruncate
+  #     - sharedscripts         # 无论有多少个日志文件，prerotate/postrotate 只执行一次
+  #   scripts:
+  #     postrotate: find /path/to/logfile* -type f -mtime +<count> -exec rm {} \;
+
+  # - name: nginx-options
+  #   path: /var/log/nginx/options.log
+  #   options:
+  #     - daily
+  #     - weekly
+  #     - size 25M
+  #     - rotate 7
+  #     - missingok
+  #     - compress
+  #     - delaycompress
+  #     - copytruncate
+
+  # - name: nginx-scripts
+  #   path: /var/log/nginx/scripts.log
+  #   options:
+  #     - daily
+  #     - weekly
+  #     - size 25M
+  #   scripts:
+  #     postrotate: "echo test"
+
+  # - name: only-delete-files
+  #   path: /path/to/logfile
+  #   options:
+  #     - nocreate
+  #     - nocompress
+  #     - nomail
+  #   scripts:
+  #     postrotate: find /path/to/logfile* -type f -mtime +<count> -exec rm {} \;

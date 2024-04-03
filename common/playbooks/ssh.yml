@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: true
+
+
+  vars:
+    set_fact:
+      service_name:
+
+  tasks:
+    - name: Update SSH configuration to be more secure.
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+      with_items:
+        - regexp: "^PasswordAuthentication"
+          line: "PasswordAuthentication no"
+        - regexp: "^PermitRootLogin"
+          line: "PermitRootLogin no"
+        - regexp: "^Port"
+          line: "Port 2849"
+      register: config_update
+
+    - name: Task that notifies a handler (RedHat).
+      debug:
+        msg: "This task will notify a handler but do nothing else"
+      notify: restart sshd
+      changed_when: config_update.changed
+      when: ansible_os_family == 'RedHat'
+
+    - name: Task that notifies a handler (Debian).
+      debug:
+        msg: "This task will notify a handler but do nothing else"
+      notify: restart ssh
+      changed_when: config_update.changed
+      when: ansible_os_family == 'Debian'
+
+  handlers:
+    # Note: Use 'sshd' for RedHat and its derivatives
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted
+
+    # Note: Use 'ssh' for Debian and its derivatives
+    - name: restart ssh
+      service:
+        name: ssh
+        state: restarted
+
+
+# 如何配置安全的 SSH 服务？（OpenSSH 安全必知必会） - https://learnku.com/server/t/36120

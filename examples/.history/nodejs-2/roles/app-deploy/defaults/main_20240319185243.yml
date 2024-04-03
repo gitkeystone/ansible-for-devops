@@ -1,4 +1,0 @@
----
-# defaults file for app-deploy
-node_apps_location: /usr/local/opt/node
-```

@@ -1,0 +1,20 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Remove unused packages
+      apt: name={{ item }} state=absent purge=yes
+      with_items:
+        - apache2
+        - nano
+        - mailutils
+      when: ansible_os_family == 'Debian'
+
+
+    - name: Remove unused packages
+      yum: name={{ item }} state=absent
+      with_items:
+        - apache2
+        - nano
+        - mailutils
+      when: ansible_os_family == 'Debian'

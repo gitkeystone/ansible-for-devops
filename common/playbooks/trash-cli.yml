@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+
+
+  tasks:
+    # 安装需要 python3, python2 不支持
+    - name: Update apt cache if needed
+      apt: update_cache=yes cache_valid_time=3600
+
+    - name: Install trash-cli
+      apt: name=trash-cli state=present
+
+
+
+
