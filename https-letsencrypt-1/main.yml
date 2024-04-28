@@ -1,0 +1,63 @@
+---
+- name: Install Nginx and use Let's Encrypt to generate SSL certificates.
+  hosts: letsencrypt
+  gather_facts: false
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Install Python if not already present.
+      ansible.builtin.raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: false
+
+    - name: Gather facts after Python is definitely present.
+      ansible.builtin.setup:
+
+    - name: Ensure apt cache is updated.
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+  roles:
+    - geerlingguy.firewall
+    - geerlingguy.nginx
+    - geerlingguy.certbot
+
+
+  tasks:
+    - name: Ensure docroot exists.
+      ansible.builtin.file:
+        path: "{{ nginx_docroot }}"
+        state: directory
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_group }}"
+        mode: 0755
+
+    - name: Copy example index.html file in place.
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: "{{ nginx_docroot }}/index.html"
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_group }}"
+        mode: 0644
+
+    - name: Copy Nginx server configuration in place.
+      ansible.builtin.template:
+        src: templates/https-letsencrypt.conf.j2
+        dest: "/etc/nginx/sites-available/https-letsencrypt.conf"
+        mode: 0644
+      notify: restart nginx
+
+    - name: Create symlink to Nginx server configuration.
+      ansible.builtin.stat:
+        path: "/etc/nginx/sites-available/https-letsencrypt.conf"
+      register: https_letsencrypt_conf_file
+
+    - name: Enable Nginx server configuration.
+      ansible.builtin.file:
+        src: "/etc/nginx/sites-available/https-letsencrypt.conf"
+        dest: "/etc/nginx/sites-enabled/https-letsencrypt.conf"
+        state: link
+      when: https_letsencrypt_conf_file.stat.exists

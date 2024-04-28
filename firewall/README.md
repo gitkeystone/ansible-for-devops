@@ -87,7 +87,7 @@ while true; do echo -e "HTTP/1.1 200 OK\r\n\r\n$(TZ=Asia/Shanghai date)" |sudo n
 
 # Python
 DEPRECATED: python2 -m SimpleHTTPServer 80 &> /dev/null &
-python3 -m http.server 9000
+python3 -m http.server 9000 [--directory /var/www/html]
 ```
 
 -z: 告诉 nc 去报告 开启的端口。通常跟 -v 一起使用， verbose.

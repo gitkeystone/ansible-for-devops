@@ -1,0 +1,47 @@
+---
+#
+# 执行：ansible-playbook self-signed-cert.yml
+#
+- name: Generate a self-signed certificate with Ansible
+  hosts: localhost
+  gather_facts: false
+  become: yes
+  connection: local
+
+  vars:
+    #
+    # TODO: Change Me!!!
+    # CN - example.com, 使用域名前部example作为目录名
+    # SANs - Subject Alternate Names
+    CN: "dsodemo.org"
+    SANs:
+    - "minio-lab.dsodemo.org"
+
+  tasks:
+    - name: Ensure directory exists for local self-signed TLS certs.
+      ansible.builtin.file:
+        path: "/etc/ssl/certs/{{ CN }}"
+        group: root
+        owner: root
+        mode: '0755'
+        state: directory
+
+    - name: Generate an OpenSSL private key.
+      community.crypto.openssl_privatekey:
+        path: "/etc/ssl/certs/{{ CN }}/privkey.pem"
+
+    - name: Generate a OpenSSL CSR.
+      community.crypto.openssl_csr:
+        path: "/etc/ssl/certs/{{ CN }}/self-signed.csr"
+        privatekey_path: "/etc/ssl/certs/{{ CN }}/privkey.pem"
+        common_name: "{{ CN }}"
+        subject_alt_name: "{{ SANs | map('regex_replace', '^', 'DNS:') | list }}"
+
+
+    - name: Generate a Self Signed OpenSSL certificate.
+      community.crypto.x509_certificate:
+        path: "/etc/ssl/certs/{{ CN }}/fullchain.pem"
+        privatekey_path: "/etc/ssl/certs/{{ CN }}/privkey.pem"
+        csr_path: "/etc/ssl/certs/{{ CN }}/self-signed.csr"
+        provider: selfsigned
+        entrust_not_after: +365d

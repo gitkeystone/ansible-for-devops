@@ -1,0 +1,51 @@
+---
+- name: Install Nginx and use GPT Academic to Call .
+  hosts: gpt_academic
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Ensure app directory exists and is writeable.
+      file:
+        path: "{{ app_directory }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: 0755
+
+    - name: Ensure application is at correct release.
+      git:
+        repo: https://github.com/binary-husky/gpt_academic.git
+        version: "{{ app_version }}"
+        dest: "{{ app_directory }}"
+        depth: 1
+        accept_hostkey: true
+        force: true
+      become: true
+      become_user: "{{ app_user }}"
+
+    - name: Define if the conda environment exists.
+      ansible.builtin.command:
+        cmd: "{{ anaconda_prefix }}/bin/conda env list"
+      register: conda_environments_list
+
+    - name: Create a new conda environment from a list of specified packages.
+      ansible.builtin.shell: |-
+        {{ anaconda_prefix }}/bin/conda create -n {{ app_name }} python=3.11
+      when: "conda_environments_list.stdout.find(app_name) == -1"
+
+    - name: Activate Anaconda Environment
+      ansible.builtin.command: |-
+        {{ anaconda_prefix }}/bin/activate {{ app_name }}
+
+    - name: Install required dependencies with pip
+      ansible.builtin.shell:
+        cmd: "{{ anaconda_prefix }}/bin/python3 -m pip install -r requirements.txt"
+      args:
+        chdir: "{{ app_directory }}"
+
+
+
+

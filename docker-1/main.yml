@@ -1,0 +1,22 @@
+---
+- name: Docker Manage
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Ensure Docker image is built from the test Dockerfile.
+      community.docker.docker_image:
+        name: test
+        source: build
+        build:
+          path: "test"
+        # state: absent
+        state: present
+
+
+    - name: Ensure the test container is running.
+      community.docker.docker_container:
+        name: test
+        image: test
+        # state: absent
+        state: started

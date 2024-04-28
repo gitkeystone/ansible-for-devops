@@ -1,0 +1,40 @@
+---
+- name: Install Nginx and use GPT Academic to Call .
+  hosts: gpt_academic
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Ensure apt cache is updated.
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install anaconda dependencies
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - libxcb-xinerama0
+        - libgl1-mesa-glx
+        - libegl1-mesa
+        - libxrandr2
+        - libxrandr2
+        - libxss1
+        - libxcursor1
+        - libxcomposite1
+        - libasound2
+        - libxi6
+        - libxtst6
+
+  roles:
+    - role: buluma.bootstrap
+    - role: buluma.core_dependencies
+    - role: buluma.epel
+    - role: buluma.python_pip
+    - role: buluma.pip
+    - role: buluma.service
+    - role: buluma.buildtools
+    - role: buluma.anaconda

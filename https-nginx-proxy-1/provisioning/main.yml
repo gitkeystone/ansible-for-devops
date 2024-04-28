@@ -1,0 +1,61 @@
+---
+- name: Install Nginx.
+  hosts: all
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Ensure apt cache is updated.
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install dependency for pyOpenssl.
+      ansible.builtin.apt:
+        name: libssl-dev
+        state: present
+
+  roles:
+    - geerlingguy.firewall
+    - geerlingguy.pip
+    - geerlingguy.nginx
+
+  tasks:
+    - name: Create self-signed certificate.
+      ansible.builtin.import_tasks: tasks/self-signed-cert.yml
+
+    - name: Ensure docroot exists.
+      ansible.builtin.file:
+        path: "{{ nginx_docroot }}"
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
+
+    - name: Copy example index.html file in place.
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: "{{ nginx_docroot }}/index.html"
+        mode: 0755
+
+    - name: Start simple python webserver on port 8080
+      ansible.builtin.shell: >
+        python3 -m http.server 8080 --directory {{ nginx_docroot }} &
+      changed_when: false
+      async: 45
+      poll: 0
+
+    - name: Copy Nginx server configuration in place.
+      ansible.builtin.template:
+        src: templates/{{ server_hostname }}.conf.j2
+        dest: "/etc/nginx/sites-available/{{ server_hostname }}.conf"
+        mode: 0644
+      notify: restart nginx
+
+    - name: Enable Nginx server configuration.
+      ansible.builtin.file:
+        src: "/etc/nginx/sites-available/{{ server_hostname }}.conf"
+        dest: "/etc/nginx/sites-enabled/{{ server_hostname }}.conf"
+        state: link

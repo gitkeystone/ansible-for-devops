@@ -1,0 +1,6 @@
+[letsencrypt]
+minio.lab.percxh.com
+
+[letsencrypt:vars]
+ansible_user=ubuntu
+letsencrypt_email=percxhr@gmail.com

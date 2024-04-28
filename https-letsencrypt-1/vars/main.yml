@@ -1,0 +1,29 @@
+---
+# Firewall settings.
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "443"
+
+# Python settings.
+pip_package: python3-pip
+pip_install_packages:
+  - name: pyOpenSSL
+
+# Nginx settings.
+nginx_vhosts: []
+nginx_remove_default_vhost: true
+nginx_ppa_use: true
+nginx_ppa_version: stable
+nginx_docroot: /var/www/html
+nginx_user: root
+nginx_group: root
+
+
+# Let's Encrypt certificate settings.
+certbot_create_if_missing: true
+certbot_admin_email: "{{ letsencrypt_email }}"
+certbot_certs:
+  - domains:
+      - "{{ inventory_hostname }}"
+

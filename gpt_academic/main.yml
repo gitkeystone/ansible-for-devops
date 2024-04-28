@@ -1,0 +1,5 @@
+---
+- import_playbook: playbooks/provision.yml
+  when: not skip_roles | default(false) | bool  # ansible-playbook -i inventory main.yml -e skip_roles=true
+
+- import_playbook: playbooks/deploy.yml
