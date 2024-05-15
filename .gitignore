@@ -10,6 +10,7 @@ test.sh
 */roles/buluma.*
 */roles/f500.*
 */roles/nickhammond.*
+*/roles/*.*
 */provisioning/roles/geerlingguy.*
 */collections/ansible_collections/community/*
 

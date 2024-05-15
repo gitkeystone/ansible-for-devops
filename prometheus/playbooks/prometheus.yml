@@ -1,0 +1,13 @@
+---
+- name: Deploy Prometheus monitoring system
+  hosts: prometheus
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - role: ericsysmin.chrony
+    - role: cloudalchemy.prometheus
+
+

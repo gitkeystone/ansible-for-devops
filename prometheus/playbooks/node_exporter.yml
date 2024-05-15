@@ -1,0 +1,12 @@
+---
+- name: Deploy prometheus node exporter
+  hosts: node_exporter
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - role: cloudalchemy.node_exporter
+
+

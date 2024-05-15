@@ -1,0 +1,39 @@
+---
+#
+# 1. Chrony
+#
+chrony_config_server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+#
+# 2. Prometheus Configuration
+#
+# Prometheus package version. Also accepts latest as parameter. Only prometheus 2.x is supported
+prometheus_version: latest
+
+# Prometheus installation tasks gets skipped when set to true.
+prometheus_skip_install: true
+
+# Prometheus global config. Compatible with official configuration
+prometheus_global:
+  scrape_interval: 10s        # 15s -> 10s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+# Targets：在不同节点（targets）上的同类应用(node);
+# Targets which will be scraped. Better example is provided in our demo site
+prometheus_targets:
+  node:
+    - targets:
+        - "localhost:9100"
+        - "192.168.56.3:9100"
+      labels:
+        env: virtualbox
+
+#
+# 3. Node Exporter Configuration
+#
+# Node exporter package version. Also accepts latest as parameter.
+node_exporter_version: latest
