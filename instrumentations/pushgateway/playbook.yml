@@ -1,0 +1,14 @@
+---
+- hosts: jobs
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+
+  tasks:
+    - import_tasks: tasks/install.yml
+
+  roles:
+    - geerlingguy.pip
+    - uZer.crontab

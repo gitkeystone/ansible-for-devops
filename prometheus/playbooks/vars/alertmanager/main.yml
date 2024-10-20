@@ -1,0 +1,60 @@
+---
+#####################
+# 1. Chrony
+#####################
+
+# Time servers
+chrony_config_server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+
+#####################################
+# 2. Alertmanager Configuration
+#####################################
+
+# Alertmanager package version. Also accepts latest as parameter.
+alertmanager_version: latest
+
+# SMTP (email) configuration
+alertmanager_smtp:
+  from: 'percxh@gmail.com'
+  smarthost: 'smtp.gmail.com:587'
+  auth_username: 'percxh@gmail.com'
+  auth_identity: 'percxh@gmail.com'
+  auth_password: 'byrq znaq uenh iaws' # alertmanager
+  require_tls: true
+
+# Alert routing.
+alertmanager_route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: email-alerts
+  routes:           # 子路由
+    - receiver: email-alerts
+      continue: true
+    - receiver: feishu-alerts
+
+# A list of notification receivers.
+alertmanager_receivers:
+  - name: email-alerts
+    email_configs:
+      - to: "{{ '{{' }} template \"email.to\" {{ '}}' }}"
+        html: "{{ '{{' }} template \"email.to.html\" . {{ '}}' }}"
+        send_resolved: true       # 故障恢复通知
+
+  - name: feishu-alerts
+    webhook_configs:
+      - url: "https://open.feishu.cn/open-apis/bot/v2/hook/3ce85260-63bf-4240-8b60-b6768d12b3e3"
+        send_resolved: true
+
+# List of folders where ansible will look for template files which will
+# be copied to {{ alertmanager_config_dir }}/templates/.
+# Files must have *.tmpl extension
+alertmanager_template_files:
+  - "{{ playbook_dir }}/files/alertmanager/templates/*.tmpl"
+

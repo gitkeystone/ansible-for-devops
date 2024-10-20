@@ -1,6 +1,6 @@
 ---
 - name: Install Nginx.
-  hosts: all
+  hosts: nginx
   become: yes
 
   vars_files:

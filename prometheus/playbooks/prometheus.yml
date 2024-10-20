@@ -4,10 +4,8 @@
   become: true
 
   vars_files:
-    - vars/main.yml
+    - vars/prometheus/main.yml
 
   roles:
     - role: ericsysmin.chrony
     - role: cloudalchemy.prometheus
-
-

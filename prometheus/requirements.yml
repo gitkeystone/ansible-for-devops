@@ -3,3 +3,6 @@ roles:
   - name: ericsysmin.chrony
   - name: cloudalchemy.prometheus
   - name: cloudalchemy.node_exporter
+  - name: cloudalchemy.alertmanager
+  - name: cloudalchemy.pushgateway
+  - name: ome.cadvisor

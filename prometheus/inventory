@@ -1,13 +1,27 @@
 [prometheus]
 192.168.56.2
 
+[pushgateway]
+192.168.56.2
+
 [node_exporter]
 192.168.56.2
 192.168.56.3
 
+[cadvisor]
+192.168.56.3
+
+[consul_exporter]
+192.168.56.3
+
+[alertmanager]
+192.168.56.4
+
 [monitoring:children]
 prometheus
 node_exporter
+cadvisor
+alertmanager
 
 [monitoring:vars]
 ansible_ssh_user=vagrant

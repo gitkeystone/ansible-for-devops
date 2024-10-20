@@ -1,0 +1,6 @@
+skip_list:
+  - 'yaml'
+  - 'role-name'
+
+exclude_paths:
+  - roles/

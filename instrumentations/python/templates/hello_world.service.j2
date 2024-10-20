@@ -1,0 +1,38 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description= A simple Hello World program that also exposes Prometheus metrics
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ _apps_system_user }}
+Group={{ _apps_system_group }}
+WorkingDirectory={{ apps_location }}/app
+
+ExecStart=python3 hello_world.py
+
+SyslogIdentifier={{ apps_name }}
+Restart=always
+RestartSec=1
+StartLimitInterval=0
+
+{% for m in ansible_mounts if m.mount == '/home' %}
+ProtectHome=read-only
+{% else %}
+ProtectHome=yes
+{% endfor %}
+NoNewPrivileges=yes
+
+{% if app_systemd_version | int >= 232 %}
+ProtectSystem=strict
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=yes
+{% else %}
+ProtectSystem=full
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target
+

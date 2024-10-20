@@ -1,0 +1,64 @@
+
+---
+#####################
+# 1. 是否禁用防火墙
+#####################
+firewall_disable_firewalld: true  # RHEL/CentOS
+firewall_disable_ufw: true        # Ubuntu
+
+
+#####################
+# 2. 是否禁用 SELinux
+#####################
+# The state, either disabled, permissive or enforcing.
+selinux_state: disabled
+
+
+#####################
+# 3. Chrony
+#####################
+
+# Time servers
+chrony_config_server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+
+#####################################
+# 4. ETCD Configuration
+#####################################
+etcd_version: v3.5.15
+etcd_checksums:
+  v3.5.15:
+    linux-amd64: sha256:3f6b48d8c2844699f2b19c1880508ecf63e1489769ed37ebb97495d5cd848a89
+
+# etcd_install_dir: /usr/local/bin
+etcd_install_dir: /usr/bin
+
+
+#####################################
+# 5. ETCD Cluster Configuration
+#####################################
+# 指定网络接口
+etcd_network_iface: "enp0s8"
+
+etcd_cluster_name: etcd-cluster
+
+etcd_data_dir: /etc/etcd
+
+etcd_cluster_data_dir: '{{ etcd_data_dir }}/data'
+etcd_cluster_pki_dir: '{{ etcd_data_dir }}/pki'
+
+etcd_pki_key_suffix: .key
+etcd_pki_cert_suffix: .crt
+
+etcd_pki_key_file: 'etcd_server{{ etcd_pki_key_suffix }}'
+etcd_pki_cert_file: 'etcd_server{{ etcd_pki_cert_suffix }}'
+
+etcd_pki_client_key_file: 'etcd_client{{ etcd_pki_key_suffix }}'
+etcd_pki_client_cert_file: 'etcd_client{{ etcd_pki_cert_suffix }}'
+
+kubernetes_cluster_pki_dir: '/etc/kubernetes/pki'
+

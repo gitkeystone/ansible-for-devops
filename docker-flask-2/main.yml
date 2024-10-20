@@ -1,0 +1,33 @@
+---
+- name: Deploy app by docker.
+  hosts: all
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Update apt cache if needed.
+      apt: update_cache=yes cache_valid_time=3600
+
+  roles:
+    - role: geerlingguy.pip
+    - role: geerlingguy.docker
+
+  tasks:
+    - name: Setup environment.
+      ansible.builtin.import_tasks: tasks/setup.yml
+
+    - name: Upload project directory.
+      ansible.builtin.copy:
+        src: my-app
+        dest: /opt
+        mode: 0755
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Deploy App.
+      command: |-
+        docker compose build
+      args:
+        chdir: "{{ project_src }}"

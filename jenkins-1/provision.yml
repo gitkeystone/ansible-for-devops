@@ -9,7 +9,11 @@
       - "8080"
     jenkins_plugins:
       - ansicolor           # Color ANSI Console Output - full color display
-
+      
+      #  - blueocean
+      
+      #  - name: influxdb
+      #    version: "1.12.1"
   pre_tasks:
     - name: Update apt cache.
       apt:

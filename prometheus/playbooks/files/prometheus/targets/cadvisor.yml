@@ -1,0 +1,7 @@
+---
+- targets:
+{% for host in groups['cadvisor'] %}
+    - "{{ host }}:8080"
+{% endfor %}
+  labels:
+    team: "monitoring"

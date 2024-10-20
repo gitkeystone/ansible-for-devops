@@ -1,0 +1,9 @@
+[apps]
+192.168.56.3
+
+[ubuntu:children]
+apps
+
+[ubuntu:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key

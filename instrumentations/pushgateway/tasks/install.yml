@@ -1,0 +1,31 @@
+---
+#
+# app
+#
+- name: Create the jobs group
+  group:
+    name: "{{ _jobs_system_group }}"
+    state: present
+    system: true
+  when: _jobs_system_group != "root"
+
+- name: Create the jobs user
+  user:
+    name: "{{ _jobs_system_user }}"
+    groups: "{{ _jobs_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+    home: /
+  when: _jobs_system_user != "root"
+
+- name: Ensure app folder exists.
+  file:
+    path: "{{ jobs_location }}"
+    state: directory
+
+- name: Copy jobs to server.
+  copy:
+    src: jobs
+    dest: "{{ jobs_location }}"

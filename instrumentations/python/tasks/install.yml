@@ -1,0 +1,35 @@
+---
+#
+# jobs
+#
+- name: Create the apps group
+  group:
+    name: "{{ _apps_system_group }}"
+    state: present
+    system: true
+  when: _apps_system_group != "root"
+
+- name: Create the apps user
+  user:
+    name: "{{ _apps_system_user }}"
+    groups: "{{ _apps_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+    home: /
+  when: _apps_system_user != "root"
+
+- name: Ensure app folder exists.
+  file:
+    path: "{{ apps_location }}"
+    state: directory
+
+- name: Copy app to server.
+  copy:
+    src: app
+    dest: "{{ apps_location }}"
+    mode: 0755
+    owner: root
+    group: root
+  notify: restart {{ apps_name }}

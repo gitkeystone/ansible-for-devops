@@ -1,0 +1,20 @@
+#
+# Python settings.
+#
+# The name of the package to install to get pip on the system.
+# For older systems that don't have Python 3 available, you can set this to python-pip.
+pip_package: 'python3-pip'  # 'python-pip' OR 'python3-pip'
+pip_install_packages:
+  - name: 'prometheus_client'
+    version: '0.20.0'
+  - name: 'twisted'
+  # - name: 'gunicorn'
+
+#
+# Application Configuration
+#
+_apps_system_group: "cxh"
+_apps_system_user: "{{ _apps_system_group }}"
+apps_location: '/opt/python3'
+apps_name: "hello_world"
+

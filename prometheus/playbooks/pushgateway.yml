@@ -1,0 +1,12 @@
+---
+- name: Deploy prometheus pushgateway using ansible.
+  hosts: pushgateway
+  become: true
+
+  vars_files:
+    - vars/pushgateway/main.yml
+
+  roles:
+    - role: ericsysmin.chrony
+    - role: cloudalchemy.pushgateway
+

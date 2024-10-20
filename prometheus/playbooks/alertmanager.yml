@@ -1,0 +1,11 @@
+---
+- name: Deploy and manage Prometheus alertmanager service
+  hosts: alertmanager
+  become: true
+
+  vars_files:
+    - vars/alertmanager/main.yml
+
+  roles:
+    - role: ericsysmin.chrony
+    - role: cloudalchemy.alertmanager

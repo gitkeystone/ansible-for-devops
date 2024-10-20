@@ -1,0 +1,114 @@
+---
+#####################
+# 1. Chrony
+#####################
+
+# Time servers
+chrony_config_server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+#####################################
+# 2. Prometheus Configuration
+#####################################
+
+# Prometheus package version. Also accepts latest as parameter. Only prometheus 2.x is supported
+prometheus_version: latest
+
+# Prometheus global config. Compatible with official configuration
+prometheus_global:
+  scrape_interval: 10s        # 15s -> 10s
+  evaluation_interval: 10s    # 15s -> 10s
+  scrape_timeout: 10s
+
+# List of folders where ansible will look for files containing custom static
+# target configuration files which will be copied to {{ prometheus_config_dir }}/file_sd/.
+# sd - service discovery
+prometheus_static_targets_files:
+  - "{{ playbook_dir }}/files/prometheus/targets/*.yml"
+  - "{{ playbook_dir }}/files/prometheus/targets/*.json"
+
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    metrics_path: "{{ prometheus_metrics_path }}"     # /metrics
+    scheme: https
+    tls_config:
+      ca_file: "prometheus.crt"
+    basic_auth:
+      username: julien
+      password: demo
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+
+  # - job_name: "pushgateway"
+  #   honor_labels: true
+  #   static_configs:
+  #     - targets:
+  #         - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9091"
+
+  # - job_name: cadvisor
+  #   file_sd_configs:
+  #     - files:
+  #         - "{{ prometheus_config_dir }}/file_sd/cadvisor.yml"
+
+  - job_name: "node"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_config_dir }}/file_sd/node.yml" # TODO: 跟 files/prometheus/targets/ 目录里面文件名字对应上
+
+  # - job_name: hello_world
+  #   file_sd_configs:
+  #     - files:
+  #         - "{{ prometheus_config_dir }}/file_sd/hello_world.yml"
+
+  # - job_name: consul
+  #   file_sd_configs:
+  #     - files:
+  #       - "{{ prometheus_config_dir }}/file_sd/consul.yml"
+
+  # - job_name: blackbox
+  #   metrics_path: /probe
+  #   params:
+  #     module: [http_2xx]
+  #   static_configs:
+  #     - targets:
+  #       - http://www.prometheus.io
+  #       - http://www.robustperception.io
+  #       - http://demo.robustperception.io
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       target_label: __param_target
+  #     - source_labels: [__param_target]
+  #       target_label: instance
+  #     - target_label: __address__
+  #       replacement: 192.168.56.2:9115
+
+# Which will be copied to {{ prometheus_config_dir }}/rules/
+# Files must have *.rules extension
+prometheus_alert_rules_files:
+  - "{{ playbook_dir }}/files/prometheus/rules/*.rules"
+  - "{{ playbook_dir }}/files/prometheus/rules/*.yml"
+
+# Configuration responsible for pointing where alertmanagers are.
+# prometheus_alertmanager_config:
+#   - static_configs:
+#     - targets:
+#       - "{{ groups['alertmanager'][0] }}:9093"
+
+
+# See https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md
+prometheus_web_config:
+  # tls_server_config: {}
+  tls_server_config:
+    cert_file: "prometheus.crt"
+    key_file: "prometheus.key"
+    min_version: "TLS10"
+    max_version: "TLS13"
+  http_server_config: {}
+  basic_auth_users:
+    julien: $2y$10$HmOixnh1/blSNgOMotD9uOA4K5tuonEaH5lFAfPQasOyeh07HO9iW
+
+

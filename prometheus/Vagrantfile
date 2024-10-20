@@ -15,7 +15,8 @@ Vagrant.configure("2") do |config|
   # Define two VMs with static private IP addresses.
   boxes = [
     { :name => "prometheus",    :ip => "192.168.56.2" },
-    { :name => "node-exporter", :ip => "192.168.56.3" }
+    { :name => "node-exporter", :ip => "192.168.56.3" },
+    { :name => "altermanager",  :ip => "192.168.56.4" }
   ]
 
   # Provision each of the VMs.

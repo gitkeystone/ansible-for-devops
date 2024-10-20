@@ -1,0 +1,10 @@
+---
+# Project settings.
+project_src: /opt/my-app
+
+# Python settings.
+pip_install_packages:
+  - name: pyopenssl
+    state: latest           # default
+  - name: docker
+  - name: docker-compose

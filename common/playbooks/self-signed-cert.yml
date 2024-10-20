@@ -13,9 +13,9 @@
     # TODO: Change Me!!!
     # CN - example.com, 使用域名前部example作为目录名
     # SANs - Subject Alternate Names
-    CN: "dsodemo.org"
+    CN: "percxh.com"
     SANs:
-    - "minio-lab.dsodemo.org"
+      - "prometheus.percxh.org"
 
   tasks:
     - name: Ensure directory exists for local self-signed TLS certs.
@@ -36,7 +36,6 @@
         privatekey_path: "/etc/ssl/certs/{{ CN }}/privkey.pem"
         common_name: "{{ CN }}"
         subject_alt_name: "{{ SANs | map('regex_replace', '^', 'DNS:') | list }}"
-
 
     - name: Generate a Self Signed OpenSSL certificate.
       community.crypto.x509_certificate:

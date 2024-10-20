@@ -1,0 +1,26 @@
+---
+services:
+  - docker
+
+env:
+  - distro: centos7
+  - distro: debian8
+  - distro: ubuntu1604
+  - distro: ubuntu1404
+  # FIXME idempotency check failing on centos6
+  # - distro: centos6
+
+script:
+  # Download test shim, clone of geerlingguy's
+  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/uZer/990587ff11255f9afdfbea9d79c3297e/raw/
+  - chmod +x ${PWD}/tests/test.sh
+
+  # Run tests without nodocker tags (ansible-galaxy --skip-tags nodocker)
+  - playbook=create.yml ${PWD}/tests/test.sh
+
+  # Run deletion and extra service tests defined in ./tests/service_tests.sh
+  - playbook=delete.yml service_tests=true ${PWD}/tests/test.sh
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+

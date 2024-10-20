@@ -1,0 +1,45 @@
+#
+# Python settings.
+#
+# The name of the package to install to get pip on the system.
+# For older systems that don't have Python 3 available, you can set this to python-pip.
+pip_package: 'python3-pip'  # 'python-pip' OR 'python3-pip'
+pip_install_packages:
+  - name: 'prometheus_client'
+    version: '0.20.0'
+  # - name: 'twisted'
+  # - name: 'gunicorn'
+
+#
+# Job Configuration
+#
+_jobs_system_user: "cxh"
+_jobs_system_group: "{{ _jobs_system_user }}"
+jobs_location: '/opt/python3'
+
+#
+# Crontab Management
+#
+
+# crontabs:
+#   vars:
+#     - name: "TESTVAR1"
+#       value: "test VALUE 2"
+#       user: "weirdo"
+#       # file: /etc/cron.d/other_cron ## Should not be used
+#     - ...
+#   jobs:
+#     - name: "Test job 1"
+#       job: "echo $TESTVAR1 > /tmp/testcron"
+#       minute: "0"
+#       hour: "2"
+#       day: "*"
+#       month: "*"
+#       weekday: "*"
+#       user: "weirdo"
+#     - ...
+crontabs:
+  vars: []
+  jobs:
+    - name: "Instrumenting a batch job and pushing its metrics to a Pushgateway"
+      job: "python3 {{ jobs_location }}/jobs/example.py"

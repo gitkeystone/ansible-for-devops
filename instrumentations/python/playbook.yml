@@ -1,0 +1,28 @@
+---
+- hosts: apps
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  handlers:
+    - import_tasks: handlers/main.yml
+
+  pre_tasks:
+    - import_tasks: tasks/preflight.yml
+
+  roles:
+    - geerlingguy.pip
+
+  tasks:
+    - import_tasks: tasks/install.yml
+    - import_tasks: tasks/configuration.yml
+
+  post_tasks:
+    - name: Ensure app is enabled on boot
+      become: true
+      systemd:
+        daemon_reload: true
+        name: "{{ apps_name }}"
+        enabled: true
+        state: started

@@ -1,0 +1,10 @@
+---
+- name: Copy the app systemd service file
+  template:
+    src: "{{ apps_name }}.service.j2"
+    dest: "/etc/systemd/system/{{ apps_name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart {{ apps_name }}
+

@@ -1,0 +1,7 @@
+---
+- targets:
+{% for host in groups['node_exporter'] %}
+    - "{{ host }}:9100"
+{% endfor %}
+  labels:
+    team: "monitoring"

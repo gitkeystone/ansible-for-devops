@@ -1,0 +1,28 @@
+---
+- name: >
+    Configures an etcd cluster. Runs a voting member on every host in
+    the etcd-master groupand a proxy on the rest of
+    the hosts in the etcd group.
+  hosts: cluster
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Change YUM repo.
+      shell: >
+        sed -i -e "s/^mirrorlist=http/#mirrorlist=http/"
+        -e "s/^#baseurl=http/baseurl=http/"
+        -e "s/mirror.centos.org/vault.centos.org/" /etc/yum.repos.d/*.repo
+      when: ansible_ssh_user == 'vagrant'
+
+    - name: Update yum cache if needed.
+      yum: update_cache=yes
+
+  roles:
+    - geerlingguy.firewall
+    - buluma.selinux
+    - ericsysmin.chrony
+    - andrewrothstein.etcd-cluster
+
