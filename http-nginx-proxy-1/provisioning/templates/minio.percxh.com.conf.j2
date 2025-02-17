@@ -1,0 +1,35 @@
+# MinIO server configuration
+
+upstream minio_cluster {
+    # 定义四台 MinIO 服务器地址
+    server 192.168.1.28:9000;
+    server 192.168.1.29:9000;
+    server 192.168.1.30:9000;
+    server 192.168.1.31:9000;
+
+    # 设置负载均衡策略（可以根据需要选择）
+    # round-robin（默认）：轮询
+    # least_conn：最少连接
+    # ip_hash：根据客户端 IP 来确定请求路由
+}
+
+server {
+    listen 9000;
+
+    # 如果需要 HTTPS 支持，可以配置 SSL：
+    # listen 443 ssl;
+    # ssl_certificate /path/to/cert.crt;
+    # ssl_certificate_key /path/to/cert.key;
+
+    # 代理请求到 MinIO 集群
+    location / {
+        proxy_pass http://minio_cluster;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Authorization $http_authorization;  # 传递 Authorization 头
+        proxy_redirect off;
+    }
+}
+

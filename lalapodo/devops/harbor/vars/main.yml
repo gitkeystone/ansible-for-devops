@@ -1,0 +1,16 @@
+---
+# Docker
+docker_repo_key_url: https://download.docker.com/linux/ubuntu/gpg
+docker_repo_url: >-
+  deb [arch={{ "amd64" if ansible_architecture == "x86_64" else "arm64" }} signed-by=/etc/apt/keyrings/docker.asc]
+  https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+
+# Harbor
+download_dir: "/tmp"
+
+harbor_dir: "/opt/harbor"
+harbor_version: "v2.11.1"
+harbor_checksum: "md5:f816a09d42b13bf4f1edfe9682b16a0b"
+harbor_data_volume: "/data/harbor"
+harbor_port: 80
+

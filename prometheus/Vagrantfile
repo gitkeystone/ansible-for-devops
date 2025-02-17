@@ -2,37 +2,37 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    # 若安装了plugin，则设置代理信息
+    config.proxy.http     = "http://192.168.1.2:7890/"
+    config.proxy.https    = "http://192.168.1.2:7890/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,192.168.0.0/16,10.0.2.0/24,10.96.0.0/12"
+  else
+    # 若没有安装plugin，则调用系统命令安装插件，并提示重运行命令
+    system('vagrant plugin install vagrant-proxyconf')
+    raise("vagrant-proxyconf installed. Run command again.");
+  end
+
   # Base VM OS configuration.
   config.vm.box = "geerlingguy/ubuntu2004"
   config.vm.synced_folder '.', '/vagrant', disabled: true
   config.ssh.insert_key = false
 
   config.vm.provider :virtualbox do |v|
-    v.memory = 512
-    v.cpus = 1
+    v.memory = 8192
+    v.cpus = 4
   end
 
   # Define two VMs with static private IP addresses.
   boxes = [
-    { :name => "prometheus",    :ip => "192.168.56.2" },
-    { :name => "node-exporter", :ip => "192.168.56.3" },
-    { :name => "altermanager",  :ip => "192.168.56.4" }
+    { :name => "prometheus",    :ip => "192.168.1.33" }
   ]
 
   # Provision each of the VMs.
   boxes.each do |opts|
     config.vm.define opts[:name] do |config|
       config.vm.hostname = opts[:name]
-      config.vm.network :private_network, ip: opts[:ip]
-
-      # Provision both VMs using Ansible after the last VM is booted.
-      # if opts[:name] == "gluster2"
-      #   config.vm.provision "ansible" do |ansible|
-      #     ansible.playbook = "playbooks/provision.yml"
-      #     ansible.inventory_path = "inventory"
-      #     ansible.limit = "all"
-      #   end
-      # end
+      config.vm.network :public_network, ip: opts[:ip], bridge: "enp6s0"
     end
   end
 

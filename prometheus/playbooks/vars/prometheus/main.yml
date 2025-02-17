@@ -1,21 +1,23 @@
 ---
-#####################
-# 1. Chrony
-#####################
-
-# Time servers
-chrony_config_server:
-  - 0.pool.ntp.org
-  - 1.pool.ntp.org
-  - 2.pool.ntp.org
-  - 3.pool.ntp.org
-
 #####################################
-# 2. Prometheus Configuration
+# 1. Prometheus Configuration
 #####################################
 
-# Prometheus package version. Also accepts latest as parameter. Only prometheus 2.x is supported
-prometheus_version: latest
+# 指定 Prometheus 的配置文件路径: /etc/prometheus/prometheus.yml
+# 指定 Prometheus 时序数据的硬盘存储路径: /var/lib/prometheus
+prometheus_config_flags_extra:
+  # 启用生命周期管理相关的 API，比如调用 /-/reload, /-/shutdown 接口就需要启用该项
+  web.enable-lifecycle: false
+  # 启用 remote write 接收数据的接口，启用该项之后，categraf、grafana-agent 等 agent 就可以通过 /api/v1/write 接口推送数据给 Prometheus
+  # https://prometheus.io/docs/prometheus/latest/feature_flags
+  web.enable-remote-write-receiver: false
+  # 即时查询在查询当前最新值的时候，只要发现这个参数指定的时间段内有数据，就取最新的那个点返回，这个时间段内没数据，就不返回了
+  query.lookback-delta: 2m
+  # 启用管理性 API，比如删除时间序列数据的 /api/v1/admin/tsdb/delete_series 接口
+  web.enable-admin-api: false
+
+# Prometheus package version. Also accepts latest as parameter. Only prometheus 3.x is supported
+prometheus_version: 3.1.0
 
 # Prometheus global config. Compatible with official configuration
 prometheus_global:
@@ -33,31 +35,36 @@ prometheus_static_targets_files:
 prometheus_scrape_configs:
   - job_name: "prometheus"
     metrics_path: "{{ prometheus_metrics_path }}"     # /metrics
-    scheme: https
-    tls_config:
-      ca_file: "prometheus.crt"
+#    scheme: https
+#    tls_config:
+#      ca_file: "prometheus.crt"
     basic_auth:
       username: julien
       password: demo
     static_configs:
       - targets:
-          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+#          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+#          - "{{ ansible_host | default('localhost') }}:9090"
+          - "localhost:9090"
 
-  # - job_name: "pushgateway"
-  #   honor_labels: true
-  #   static_configs:
-  #     - targets:
-  #         - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9091"
+
+  - job_name: "node"
+    file_sd_configs:
+      - files:
+          - "{{ prometheus_config_dir }}/file_sd/node_exporter.yml" # TODO: 跟 files/prometheus/targets/ 目录里面文件名字对应上
+
+
+  - job_name: "pushgateway"
+    honor_labels: true
+    static_configs:
+      - targets:
+         - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9091"
 
   # - job_name: cadvisor
   #   file_sd_configs:
   #     - files:
   #         - "{{ prometheus_config_dir }}/file_sd/cadvisor.yml"
 
-  - job_name: "node"
-    file_sd_configs:
-      - files:
-          - "{{ prometheus_config_dir }}/file_sd/node.yml" # TODO: 跟 files/prometheus/targets/ 目录里面文件名字对应上
 
   # - job_name: hello_world
   #   file_sd_configs:
@@ -93,21 +100,22 @@ prometheus_alert_rules_files:
   - "{{ playbook_dir }}/files/prometheus/rules/*.yml"
 
 # Configuration responsible for pointing where alertmanagers are.
-# prometheus_alertmanager_config:
-#   - static_configs:
-#     - targets:
-#       - "{{ groups['alertmanager'][0] }}:9093"
+prometheus_alertmanager_config:
+ - static_configs:
+   - targets:
+     - "{{ groups['alertmanager'][0] }}:9093"
 
 
 # See https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md
 prometheus_web_config:
-  # tls_server_config: {}
-  tls_server_config:
-    cert_file: "prometheus.crt"
-    key_file: "prometheus.key"
-    min_version: "TLS10"
-    max_version: "TLS13"
-  http_server_config: {}
+#  tls_server_config:
+#    cert_file: "prometheus.crt"
+#    key_file: "prometheus.key"
+#    min_version: "TLS10"
+#    max_version: "TLS13"
+#  http_server_config: {}
+  # 账号：juline
+  # 密码：demo
   basic_auth_users:
     julien: $2y$10$HmOixnh1/blSNgOMotD9uOA4K5tuonEaH5lFAfPQasOyeh07HO9iW
 

@@ -1,0 +1,39 @@
+---
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - curl
+      - apt-transport-https
+      - gnupg
+      - tree
+
+- name: Add GitLab apt repository key.
+  get_url:
+    url: "{{ gitlab_repo_key_url }}"
+    dest: /etc/apt/trusted.gpg.d/gitlab.asc
+    mode: 0644
+    timeout: 30
+    force: true
+  reties: 5
+  delay: 10
+
+- name: Add GitLab apt repository.
+  apt_repository:
+    repo: "{{ gitlab_repo_url }}"
+    state: present
+    update_cache: true
+    filename: "gitlab-ce"
+  when: gitlab_repo_url | default(false)
+
+- name: Install GitLab.
+  apt:
+    name: gitlab-ce
+    state: present
+
+- name: start GitLab.
+  command: >-
+    gitlab-ctl reconfigure
+  failed_when: false
+
+
+

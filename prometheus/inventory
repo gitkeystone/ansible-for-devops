@@ -1,28 +1,26 @@
-[prometheus]
-192.168.56.2
+[node_exporter]
+192.168.1.33
 
 [pushgateway]
-192.168.56.2
+192.168.1.33
 
-[node_exporter]
-192.168.56.2
-192.168.56.3
 
-[cadvisor]
-192.168.56.3
 
-[consul_exporter]
-192.168.56.3
+[prometheus]
+192.168.1.33
 
 [alertmanager]
-192.168.56.4
+192.168.1.33
 
-[monitoring:children]
-prometheus
+[grafana]
+192.168.1.33
+
+[monitoring_system:children]
 node_exporter
-cadvisor
+prometheus
 alertmanager
+grafana
 
-[monitoring:vars]
+[monitoring_system:vars]
 ansible_ssh_user=vagrant
 ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key

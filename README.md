@@ -111,4 +111,23 @@ The above sponsor(s) are supporting Jeff Geerling on [GitHub Sponsors](https://g
 Buy [Ansible for DevOps](https://www.ansiblefordevops.com/) for your e-reader or in paperback format.
 
 
+# 
 
+geerlingguy/centos6
+geerlingguy/centos7
+geerlingguy/centos8
+
+geerlingguy/debian8
+geerlingguy/debian9
+geerlingguy/debian10
+geerlingguy/debian11
+
+geerlingguy/drupal-vm
+
+geerlingguy/rockylinux8
+
+geerlingguy/ubuntu1204
+geerlingguy/ubuntu1404
+geerlingguy/ubuntu1604
+geerlingguy/ubuntu1804
+geerlingguy/ubuntu2004

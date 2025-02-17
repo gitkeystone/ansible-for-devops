@@ -1,0 +1,12 @@
+---
+- name: Provision and manage grafana - platform for analytics and monitoring
+  hosts: grafana
+  become: true
+
+  vars_files:
+    - vars/grafana/main.yml
+
+  roles:
+    - role: cloudalchemy.grafana
+
+

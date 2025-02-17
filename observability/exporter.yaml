@@ -11,29 +11,29 @@
         shell: /bin/false
 
     - ansible.builtin.stat:
-        path: /usr/local/bin/node_exporter
+        path: /usr/local/bin/node-exporter
       register: node_exporter_archive
-    - name: upload "files/node_exporter"
+    - name: upload "files/node-exporter"
       ansible.builtin.copy:
-        src: files/node_exporter
-        dest: /usr/local/bin/node_exporter
+        src: files/node-exporter
+        dest: /usr/local/bin/node-exporter
         mode: '0744'
         owner: node-exporter
         group: node-exporter
       when: node_exporter_archive.stat.exists == false
 
     - ansible.builtin.stat:
-        path: /etc/systemd/system/node_exporter.service
+        path: /etc/systemd/system/node-exporter.service
       register: node_exporter_service_archive
-    - name: upload "files/node_exporter.service"
+    - name: upload "files/node-exporter.service"
       ansible.builtin.copy:
-        src: "files/node_exporter.service"
-        dest: /etc/systemd/system/node_exporter.service
+        src: "files/node-exporter.service"
+        dest: /etc/systemd/system/node-exporter.service
       when: node_exporter_service_archive.stat.exists == false
 
     - name: Start service
       ansible.builtin.systemd_service:
-        name: node_exporter
+        name: node-exporter
         state: started
         enabled: true
         daemon_reload: true

@@ -1,0 +1,12 @@
+---
+# Nginx settings.
+nginx_vhosts: []
+nginx_remove_default_vhost: true
+nginx_ppa_use: true
+nginx_ppa_version: stable
+
+# Self-signed certificate settings.
+certificate_dir: /etc/ssl/private
+#server_hostname: prometheus.percxh.com
+server_hostname: minio.percxh.com
+

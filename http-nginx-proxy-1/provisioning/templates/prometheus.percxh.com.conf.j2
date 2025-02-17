@@ -1,0 +1,24 @@
+# HTTPS Test server configuration.
+
+# Redirect HTTP traffic to HTTPS.
+server {
+    listen 80 default_server;
+    server_name _;
+    index index.html;
+    return 301 https://$host$request_uri;
+}
+
+# Serve HTTPS traffic using the self-signed certificate created by Ansible.
+server {
+    listen 443  default_server;
+    server_name {{ server_hostname }};
+
+    location / {
+        include /etc/nginx/proxy_params;
+        proxy_pass http://localhost:9090;
+        proxy_read_timeout 90s;
+        proxy_redirect http://localhost:9090 {{ server_hostname }};
+    }
+
+}
+

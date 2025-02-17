@@ -4,21 +4,34 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    # 若安装了plugin，则设置代理信息
+    config.proxy.http     = "http://192.168.1.2:7890/"
+    config.proxy.https    = "http://192.168.1.2:7890/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,192.168.0.0/16,10.0.2.0/24,10.96.0.0/12"
+  else
+    # 若没有安装plugin，则调用系统命令安装插件，并提示重运行命令
+    system('vagrant plugin install vagrant-proxyconf')
+    raise("vagrant-proxyconf installed. Run command again.");
+  end
+
   config.vm.box = "geerlingguy/ubuntu2004"
-  config.vm.hostname = "https.test"
-  config.vm.network :private_network, ip: "192.168.56.84"
+  config.vm.hostname = "nginx"
+  config.vm.network :private_network, ip: "192.168.1.32"
   config.ssh.insert_key = false
 
   config.vm.provider :virtualbox do |v|
-    v.memory = 512
+    v.memory = 1024
+    v.cpus  = 2
   end
 
-  # Ansible provisioning.
-  # config.vm.provision "ansible" do |ansible|
-  #   ansible.playbook = "provisioning/main.yml"
-  #   ansible.become = true
-  #   ansible.extra_vars = {
-  #     ansible_python_interpreter: "/usr/bin/python3",
-  #   }
-  # end
+  Ansible provisioning.
+  config.vm.provision "ansible" do |ansible|
+    ansible.compatibility_mode = "2.0"
+    ansible.playbook = "provisioning/main.yml"
+    ansible.become = true
+    ansible.extra_vars = {
+      ansible_python_interpreter: "/usr/bin/python3",
+    }
+  end
 end

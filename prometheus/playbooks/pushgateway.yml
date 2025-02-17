@@ -7,6 +7,5 @@
     - vars/pushgateway/main.yml
 
   roles:
-    - role: ericsysmin.chrony
     - role: cloudalchemy.pushgateway
 

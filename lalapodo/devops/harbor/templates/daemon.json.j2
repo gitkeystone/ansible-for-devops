@@ -1,0 +1,4 @@
+{
+    "exec-opts": ["native.cgroupdriver=systemd"],
+    "insecure-registries": ["{{ ansible_facts.enp0s8.ipv4.address }}:{{ harbor_port }}"]
+}

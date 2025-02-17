@@ -1,13 +1,12 @@
 ---
-- name: Deploy prometheus node exporter
-  hosts: node_exporter
+- name: Deploy prometheus node exporter using ansible.
+  hosts: node-exporter
   become: true
 
   vars_files:
     - vars/node_exporter/main.yml
 
   roles:
-    - role: ericsysmin.chrony
     - role: cloudalchemy.node_exporter
 
 

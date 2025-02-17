@@ -1,0 +1,14 @@
+---
+- name: Configure Alis
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+    create: yes
+  with_items:
+    - alias k='kubectl'
+    - alias ks='kubectl -n kube-system'
+
+
+
+
+

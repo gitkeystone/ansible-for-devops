@@ -1,5 +1,5 @@
 ---
-- name: Deploy and manage Prometheus alertmanager service
+- name: Deploy and manage Prometheus alertmanager service using ansible.
   hosts: alertmanager
   become: true
 
@@ -7,5 +7,4 @@
     - vars/alertmanager/main.yml
 
   roles:
-    - role: ericsysmin.chrony
     - role: cloudalchemy.alertmanager

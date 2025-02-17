@@ -1,0 +1,20 @@
+---
+groups:
+  - name: example
+    rules:
+    - alert: InstanceDown
+      expr: up{job="node"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.{% endraw %}"
+        summary: "{% raw %}Instance {{ $labels.instance }} down{% endraw %}"
+
+    - alert: MemoryUntil
+      expr: 100 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 > 1
+      for: 1m
+      labels:
+        severity: warn
+      annotations:
+        summary: Mem usage larger than 1%, instance:{{ $labels.instance }}

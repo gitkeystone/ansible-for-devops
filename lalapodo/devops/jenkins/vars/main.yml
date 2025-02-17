@@ -1,0 +1,14 @@
+---
+# Corretto JDK
+corretto_jdk_name: java-21-amazon-corretto-jdk
+corretto_jdk_repo_key_url: https://apt.corretto.aws/corretto.key
+corretto_jdk_repo_url: >-
+  deb [signed-by=/usr/share/keyrings/corretto-keyring.asc] https://apt.corretto.aws stable main
+
+
+# Docker
+docker_repo_key_url: https://download.docker.com/linux/ubuntu/gpg
+docker_repo_url: >-
+  deb [arch={{ "amd64" if ansible_architecture == "x86_64" else "arm64" }} signed-by=/etc/apt/keyrings/docker.asc]
+  https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+

@@ -1,6 +1,6 @@
 ---
 roles:
-  - name: geerlingguy.firewall
   - name: buluma.selinux
+  - name: geerlingguy.firewall
   - name: ericsysmin.chrony
   - name: andrewrothstein.etcd-cluster

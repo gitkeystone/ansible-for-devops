@@ -1,0 +1,29 @@
+---
+# Security
+grafana_security:
+  admin_user: admin
+  admin_password: 123456
+
+# Datasource
+deleteDatasources:
+ - name: prometheus
+   orgId: 1
+
+grafana_datasources: []
+#  - name: prometheus
+#    type: prometheus
+#    access: proxy
+#    url: 'http://192.168.1.33:9090'
+#    basicAuth: true
+#    basicAuthUser: "julien"
+#    basicAuthPassword: "demo"
+
+# Dashboard
+grafana_dashboards: []
+#  - dashboard_id: 1860
+#    revision_id: 37
+#    datasource: prometheus
+
+
+
+

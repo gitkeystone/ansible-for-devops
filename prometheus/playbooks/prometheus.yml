@@ -1,5 +1,5 @@
 ---
-- name: Deploy Prometheus monitoring system
+- name: Deploy Prometheus monitoring system using ansible.
   hosts: prometheus
   become: true
 
@@ -7,5 +7,5 @@
     - vars/prometheus/main.yml
 
   roles:
-    - role: ericsysmin.chrony
     - role: cloudalchemy.prometheus
+

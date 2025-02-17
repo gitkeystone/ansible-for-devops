@@ -1,0 +1,39 @@
+---
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - curl
+
+- name: Download harbor
+  get_url:
+    url: "https://github.com/goharbor/harbor/releases/download/{{ harbor_version }}/harbor-offline-installer-{{ harbor_version }}.tgz"
+    dest: "{{ download_dir }}/harbor-offline-installer-{{ harbor_version }}.tgz"
+    checksum: "{{ harbor_checksum }}"
+    mode: 0644
+    timeout: 30
+    force: no
+  retries: 5
+  delay: 10
+  register: download_result
+  until: download_result is succeeded
+
+- name: Expand harbor
+  unarchive:
+    src: "{{ download_dir }}/harbor-offline-installer-{{ harbor_version }}.tgz"
+    dest: "/opt"
+    remote_src: yes
+    creates: "{{ harbor_dir }}/harbor.yml.tmpl"
+
+- name: Configure harbor
+  template:
+    src: "templates/harbor.yml.j2"
+    dest: "{{ harbor_dir }}/harbor.yml"
+    mode: 0644
+
+- name: Prepare docker-compose file
+  ansible.builtin.command: >-
+    /usr/bin/bash ./prepare
+  args:
+    chdir: "{{ harbor_dir }}"
+    creates: "{{ harbor_dir }}/docker-compose.yml"
+  notify: Install and start harbor

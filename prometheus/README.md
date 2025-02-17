@@ -4,6 +4,13 @@
 - [安装 altermanager](#安装-altermanager)
 
 
+# 基础安装
+
+```bash
+# 软件更新
+# 时间同步
+ansible-playbook -i inventory playbooks/base.yml
+```
 
 # 安装 prometheus
 
@@ -17,7 +24,7 @@ ansible-playbook -i inventory playbooks/prometheus.yml -e "prometheus_skip_insta
 ```
 
 
-首次安装，需要下载 prometheus 二进制文件，并配置 systemd 启动脚本, 所以，需要设置变量 prometheus_skip_install: true； 安装成功后，就不用再次下载了，所以，可以设置变量 node_exporter_skip_install: false
+首次安装，需要下载 prometheus 二进制文件，并配置 systemd 启动脚本, 所以，需要设置变量 prometheus_skip_install: false； 安装成功后，就不用再次下载了，所以，可以设置变量 prometheus_skip_install: true
 
 targets:
 1. 使用 prometheus_targets 变量，创建 file_sd/ 目录里面创建文件；

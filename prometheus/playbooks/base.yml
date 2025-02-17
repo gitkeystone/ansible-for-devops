@@ -1,0 +1,14 @@
+---
+- name: Deploy VMs base
+  hosts: all
+  become: true
+
+  vars_files:
+    - vars/base/main.yml
+
+  pre_tasks:
+    - name: Update apt cache if needed
+      apt: update_cache=yes cache_valid_time=3600
+
+  roles:
+    - role: ericsysmin.chrony
